@@ -12,9 +12,9 @@ async function connect() {
 
 
 
-async function selectAcessos() {
+async function selectAcessos(table) {
     const conn = await connect();
-    const [rows] = await conn.query('SELECT * FROM tb_acessos_casa_new;');
+    const [rows] = await conn.query(`SELECT * FROM ${table};`);
     return rows;
 }
 
