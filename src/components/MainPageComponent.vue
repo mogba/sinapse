@@ -4,7 +4,7 @@
             <div class="container">
                 <div class="navbar-brand">
                     <a class="navbar-item" href="/">
-                        <img src="../assets/sinapse-logo.png" alt="Logo Sinapse">
+                        <img src="../assets/logo.png" alt="Logo Sinapse">
                     </a>
                 </div>
                 <div id="navbarMenu" class="navbar-menu">
