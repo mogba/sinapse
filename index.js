@@ -3,6 +3,7 @@
     const db = require("./db");
     console.log('Começou!');
 
+    /*
     console.log('Teste insert SINAPSE');
     const resultInsertSinapse =
         await db.insertSinapse({
@@ -31,4 +32,14 @@
     console.log('SELECT * FROM SINAPSE');
     const sinpase = await db.selectAcessos("SINAPSES");
     console.log(sinpase);
+    */
+    console.log('SELECT * FROM SINAPSE');
+    const sinapse = await db.selectIdSinapse("SINAPSES", 3);
+    console.log(sinapse);
+
+    console.log("__________________________________-");
+
+    console.log('SELECT * FROM SINAPSE com campo');
+    const sinapsecolumn = await db.selectByColumn("SINAPSES", "NOME_SINAPSE", "BatmanSina");
+    console.log(sinapsecolumn);
 })();
