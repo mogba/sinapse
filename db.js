@@ -1,3 +1,4 @@
+/* Conexão com o banco do Jaison. MySQL */
 async function connect() {
     if (global.connection && global.connection.state !== 'disconnected')
         return global.connection;
@@ -9,12 +10,33 @@ async function connect() {
     return connection;
 }
 
-async function selectAcessos(table) {
+/* Funções de select - Inicio */
+
+async function selectAllTable(table) {
     const conn = await connect();
     const [rows] = await conn.query(`SELECT * FROM ${table};`);
     return rows;
 }
 
+async function selectIdSinapse(table, id) {
+    const conn = await connect();
+    const pk = 'ID_SINAPSE';
+    const sql = (`SELECT * FROM ${table} WHERE ${pk} = ?;`);
+    const [rows] = await conn.query(sql, [id]);
+    return rows;
+}
+
+async function selectByColumn(table, column, value) {
+    const conn = await connect();
+    const sql = (`SELECT * FROM ${table} WHERE ${column} = ?;`);
+    const [rows] = await conn.query(sql, [value]);
+    return rows;
+}
+
+
+/* Funções de select - Fim */
+
+/* Funções de insert - Inicio */
 async function insertSinapse(sinapse) {
     const conn = await connect();
     const sql =
@@ -33,12 +55,22 @@ async function insertPost(post) {
     return await conn.query(sql, values);
 }
 
+async function insertComentario(comentario) {
+    const conn = await connect();
+    const sql =
+        'INSERT INTO COMENTARIOS (ID_POST,NOME_USUARIO,DESC_COMENTARIO,VOTOS) ' +
+        'VALUES (?, ?, ?, ?);';
+    const values = [comentario.id_post, comentario.nome_usuario, comentario.desc_comentario, comentario.votos]
+    return await conn.query(sql, values);
+}
+
+/* Funções de insert - Fim */
+
 async function deletetPost(post) {
     const conn = await connect();
     const sql =
-        `DELETE FROM TB_POST WHERE ID_POST = ?;`
+        `DELETE FROM POSTS WHERE ID_POST = ?;`
     return await conn.query(sql, [post]);
 }
 
-
-module.exports = { selectAcessos, connect, insertPost, deletetPost, insertSinapse }
+module.exports = { selectAllTable, connect, insertPost, deletetPost, insertSinapse, selectIdSinapse, insertComentario, selectByColumn }
