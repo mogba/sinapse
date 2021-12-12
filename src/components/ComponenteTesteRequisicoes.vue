@@ -72,8 +72,14 @@ export default {
            })
         },
         criar() {
-            api
-                .post("url", {
+            api.post("teste",{
+                    "nome_sinapse": "Post do Front", 
+                    "nome_usuario": "Axios Minusculo"
+                }).then((response) => {
+                    console.log(response)
+                });
+            /*
+            api.post("url", {
                     oof: this.dados.oof,
                     ooof: this.dados.ooof,
                     oooof: this.dados.oooof,
@@ -83,6 +89,7 @@ export default {
                 .then(response =>{
                     alert(response.data);
                 });
+            */
         },
         atualizar() {
             api

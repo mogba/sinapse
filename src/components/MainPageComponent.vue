@@ -32,6 +32,7 @@
 import Navbar from "../components/NavbarComponent.vue";
 import PostCard from "../components/PostCardComponent.vue";
 import AddPostButton from "../components/AddPostButtonComponent.vue";
+//import api from "../services/services";
 
 export default {
     name: 'MainPage',
@@ -50,6 +51,15 @@ export default {
     },
     methods: {
         carregarPosts() {
+            /*
+            api.get("posts").then(async response => {
+                console.log(response.data);
+                this.posts.id = await response.data.id_post
+                this.posts.descricao = await response.data.descricao
+                this.posts.linkImagem = "https://source.unsplash.com/h-ACUrBngrw/1280x720"
+           })
+           */
+           
             this.posts = [
                 {
                     id: 1,
@@ -90,27 +100,7 @@ export default {
                     id: 4,
                     linkImagem: "https://source.unsplash.com/h-ACUrBngrw/1280x720",
                     conteudo: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
-                },
-                {
-                    id: 1,
-                    linkImagem: "https://source.unsplash.com/h-ACUrBngrw/1280x720",
-                    conteudo: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
-                },
-                {
-                    id: 2,
-                    linkImagem: "https://source.unsplash.com/h-ACUrBngrw/1280x720",
-                    conteudo: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
-                },
-                {
-                    id: 3,
-                    linkImagem: "",
-                    conteudo: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
-                },
-                {
-                    id: 4,
-                    linkImagem: "https://source.unsplash.com/h-ACUrBngrw/1280x720",
-                    conteudo: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
-                },
+                }
             ]
         }
     }

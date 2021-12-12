@@ -9,14 +9,14 @@
 </template>
 
 <script>
-//import MainPage from "./components/MainPageComponent.vue";
-import ComponenteTesteRequisicoes from "./components/ComponenteTesteRequisicoes.vue";
+import MainPage from "./components/MainPageComponent.vue";
+//import ComponenteTesteRequisicoes from "./components/ComponenteTesteRequisicoes.vue";
 
 export default {
     name: 'App',
     components: {
-        //MainPage,
-        ComponenteTesteRequisicoes
+        MainPage,
+        //ComponenteTesteRequisicoes
     }
 }
 </script>
