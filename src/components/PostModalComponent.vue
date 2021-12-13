@@ -267,7 +267,7 @@ export default {
 
 .conteudo-imagem {
     width: 100%;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 
 .conteudo-imagem>input
@@ -299,7 +299,6 @@ label .file-label {
     position: relative;
     z-index: 0;
     width: 100%;
-    border-radius: 5px;
     object-fit: cover;
     cursor: pointer;
 }
