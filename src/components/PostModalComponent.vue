@@ -8,7 +8,7 @@
                         class="input column" 
                         type="text" 
                         placeholder="Adicionar um título ao post..."
-                        v-model="post.titulo" />
+                        v-model="post.TITULO" />
                 </div>
                 <div class="column is-narrow">
                     <button class="delete is-danger" aria-label="close" @click="esconderModal()"></button>
@@ -59,7 +59,7 @@
                     <textarea 
                         class="textarea conteudo-texto" 
                         placeholder="Adicionar o conteúdo do post" 
-                        v-model="post.conteudo">
+                        v-model="post.DESCRICAO">
                     </textarea>
                 </div>
             </section>
@@ -85,19 +85,18 @@ export default {
     data() {
         return {
             post: {
-                id: -1,
-                titulo: "",
-                conteudo: "",
-                // linkImagem: "https://picsum.photos/id/1005/600/200"
-                linkImagem: ""
+                ID_POST: -1,
+                TITULO: "",
+                CARD: "",
+                DESCRICAO: "",
             },
         }
     },
     mounted() {
-        this.eventBus.$on("eventoMostrarModal", () => this.mostrarModal());
+        this.eventBus.$on("evento-mostrar-modal", (postSelecionado) => this.mostrarModal(postSelecionado));
     },
     beforeDestroy() {
-        this.eventBus.$off("eventoMostrarModal");
+        this.eventBus.$off("evento-mostrar-modal");
     },
     methods: {
         // CRUD do post
@@ -109,11 +108,11 @@ export default {
             }
             api.post("create/posts", {
                     "id_sinapse" : 1, //Corrigir pra pegar o ID_SINAPSE de fato
-                    "titulo" : this.titulo,
-                    "descricao" : this.conteudo,
+                    "titulo" : this.post.TITULO,
+                    "descricao" : this.post.DESCRICAO,
                     "publico" : 1,
                     "token_acesso" : "",
-                    "card" : this.linkImagem,
+                    "card" : this.post.CARD,
                     "votos" : ""
                 }).then((response) => {
                     console.log(response)
@@ -128,45 +127,58 @@ export default {
             console.log("Excluiu registro")
 
             this.post = {
-                titulo: null,
-                conteudo: null,
-                imagem: null
+                ID_POST: -1,
+                TITULO: "",
+                DESCRICAO: "",
+                CARD: ""
             }
 
             // delete
         },
 
         // Anexo da imagem
-        atualizarPrevisualizacaoImagem() {
-            const imagem = document.querySelector("input.file-input").files[0];
+        atualizarCampoImagem() {
+            const campoImagem = document.querySelector("input.file-input");
+            campoImagem.setAttribute("src", this.post.CARD);
+            this.atualizarPrevisualizacaoImagem();
+        },
+        atualizarPrevisualizacaoImagem(ulrNovaImagem) {
+            if (!ulrNovaImagem) {
+                const arquivoImagem = document.querySelector("input.file-input").files[0];
 
-            if (imagem) {
-                this.carregarPrevisualizacaoImagem(imagem);
-                this.adicionarEventosAlternanciaPrevisualizacao();
-                return;
+                if (arquivoImagem) {
+                    this.lerArquivoECarregarPrevisualizacaoImagem(arquivoImagem);
+                }
+            }
+            else {
+                this.carregarPrevisualizacaoImagem(ulrNovaImagem);
             }
 
-            alert("Error ao obter a imagem.");
+            this.adicionarEventosAlternanciaPrevisualizacao();
         },
-        carregarPrevisualizacaoImagem(imagem) {
+        lerArquivoECarregarPrevisualizacaoImagem(arquivoImagem) {
             this.descarregarPrevisualizacaoImagem();
 
             const fileReader = new FileReader();
 
-            fileReader.onload = function() {
-                const previsualizacaoImagem = document.getElementById("previsualizacaoImagem");
-                previsualizacaoImagem.setAttribute("src", fileReader.result);
-                previsualizacaoImagem.style.visibility = "visible";
-            }
+            fileReader.onload = () => this.carregarPrevisualizacaoImagem(fileReader.result);
 
-            fileReader.readAsDataURL(imagem);
+            fileReader.readAsDataURL(arquivoImagem);
 
             console.log("Sucesso em carregar pré-visualização da imagem.");
+        },
+        carregarPrevisualizacaoImagem(urlImagem) {
+            const previsualizacaoImagem = document.getElementById("previsualizacaoImagem");
+            previsualizacaoImagem.setAttribute("src", urlImagem);
+            previsualizacaoImagem.style.visibility = "visible";
         },
         descarregarPrevisualizacaoImagem() {
             const previsualizacaoImagem = document.getElementById("previsualizacaoImagem");
             previsualizacaoImagem.removeAttribute("src");
             previsualizacaoImagem.style.visibility = "hidden";
+
+            const campoImagem = document.querySelector("input.file-input");
+            campoImagem.value = null;
 
             console.log("Sucesso em descarregar pré-visualização da imagem.");
         },
@@ -187,15 +199,15 @@ export default {
             document.querySelector("div.file-cta").style.zIndex = "1";
         },
         removerEventosAlternanciaPrevisualizacao() {
-            let containerConteudoImagem = document.querySelector("div.conteudo-imagem");
+            // let containerConteudoImagem = document.querySelector("div.conteudo-imagem");
 
-            containerConteudoImagem.removeEventListener(
-                "mouseenter", 
-                () => this.mostrarElementosImagem());
+            // containerConteudoImagem.removeEventListener(
+            //     "mouseenter", 
+            //     () => this.mostrarElementosImagem());
 
-            containerConteudoImagem.removeEventListener(
-                "mouseleave", 
-                () => this.esconderElementosImagem());
+            // containerConteudoImagem.removeEventListener(
+            //     "mouseleave", 
+            //     () => this.esconderElementosImagem());
             
             this.mostrarElementosImagem();
             document.querySelector("div.file-cta").style.visibility = "visible";
@@ -213,8 +225,13 @@ export default {
         },
 
         // Alternância de visibilidade do modal
-        mostrarModal() {
-            console.log("chegou no post modal");
+        mostrarModal(postSelecionado) {
+            if (postSelecionado) {
+                this.post = postSelecionado;
+                
+                if (this.post.CARD)
+                    this.atualizarPrevisualizacaoImagem(this.post.CARD);
+            }
 
             const modal = document.getElementById("postModal");
             modal.classList.add("is-active");

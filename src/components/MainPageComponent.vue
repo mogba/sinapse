@@ -20,11 +20,15 @@
             <div class="container">
                 <div class="section">
                     <div class="row columns is-multiline">
-                        <post-card :post="post" v-for="post in posts" v-bind:key="post.ID_POST" />
+                        <post-card
+                            :eventBus="eventBus"
+                            :post="post" 
+                            v-for="post in posts" 
+                            v-bind:key="post.ID_POST" />
                     </div>
                 </div>
             </div>
-            <post-modal :eventBus="eventBus" :post="postSelecionado" />
+            <post-modal :eventBus="eventBus" />
         </div>
     </div>
 </template>
@@ -51,7 +55,6 @@ export default {
         return {
             eventBus: {},
 
-            postSelecionado: {},
             posts: [],
         }
     },
@@ -60,39 +63,55 @@ export default {
     },
     mounted() {
         this.carregarPosts();
+
+        this.eventBus.$on("evento-click-post-card", (postSelecionado) => this.mostrarModal(postSelecionado));
     },
     methods: {
         carregarPosts() {
             api.get("posts").then(response => {	
-                console.log(response.data);	
+                console.log("posts carregados do banco: " + JSON.stringify(response.data));	
                 this.posts = response.data;	
            });
 
-            // this.posts = [
-            //     {
-            //         id: 1,
-            //         linkImagem: "https://source.unsplash.com/h-ACUrBngrw/1280x720",
-            //         conteudo: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
-            //     },
-            //     {
-            //         id: 2,
-            //         linkImagem: "https://source.unsplash.com/h-ACUrBngrw/1280x720",
-            //         conteudo: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
-            //     },
-            //     {
-            //         id: 3,
-            //         linkImagem: "",
-            //         conteudo: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
-            //     },
-            //     {
-            //         id: 4,
-            //         linkImagem: "https://source.unsplash.com/h-ACUrBngrw/1280x720",
-            //         conteudo: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
-            //     },
-            // ]
+            this.posts = [
+                {
+                    ID_POST: 1,
+                    TITULO: "Um título fictício",
+                    CARD: "",
+                    DESCRICAO: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
+                },
+                {
+                    ID_POST: 2,
+                    TITULO: "Estudos - Resumo de Node.js",
+                    CARD: "https://source.unsplash.com/h-ACUrBngrw/1280x720",
+                    DESCRICAO: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
+                },
+                {
+                    ID_POST: 3,
+                    TITULO: "Lista de compras",
+                    CARD: "https://www.papodemamaeamelia.com.br/wp-content/uploads/2020/05/lista-loja-e1619988624693.jpeg",
+                    DESCRICAO: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
+                },
+                {
+                    ID_POST: 4,
+                    TITULO: "Respostas da prova de desenvolvimento web",
+                    CARD: "https://imagensemoldes.com.br/wp-content/uploads/2018/06/Emoji-Diabinho-Sorridente-PNG.png",
+                    DESCRICAO: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
+                },
+                {
+                    ID_POST: 5,
+                    TITULO: "Estudos - Elixir",
+                    CARD: "",
+                    DESCRICAO: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
+                },
+            ]
         },
-        mostrarModal() {
-            this.eventBus.$emit("eventoMostrarModal");
+        mostrarModal(postSelecionado) {
+            this.eventBus.$emit("evento-mostrar-modal", postSelecionado);
+        },
+
+        testar(post) {
+            alert(post);
         }
     }
 }
