@@ -3,13 +3,12 @@
         <div class="modal-background"></div>
         <div class="modal-card modal-card-custom-size">
             <header class="modal-card-head">
-                <!-- <p class="modal-card-title">{{post.titulo}}</p> -->
                 <div class="column">
                     <input 
                         class="input column" 
                         type="text" 
                         placeholder="Adicionar um título ao post..."
-                        @value="post.titulo" />
+                        v-model="post.titulo" />
                 </div>
                 <div class="column is-narrow">
                     <button class="delete is-danger" aria-label="close" @click="esconderModal()"></button>
@@ -22,6 +21,20 @@
                     <div class="file is-boxed">
                         <div class="conteudo-imagem">
                             <label class="file-label" for="campoUploadImagem">
+                                <img 
+                                    id="previsualizacaoImagem" 
+                                    class="previsualizacao-imagem" />
+
+                                <div class="file-cta file-cta-position">
+                                    <!-- <div class="file-components"> -->
+                                        <span class="file-icon">
+                                            <font-awesome-icon icon="upload" />
+                                        </span>
+                                        <span class="file-label">
+                                            Adicionar uma imagem ao post
+                                        </span>
+                                    <!-- </div> -->
+                                </div>
 
                                 <input 
                                     id="campoUploadImagem"
@@ -29,25 +42,18 @@
                                     type="file" 
                                     name="imagem" 
                                     accept="image/x-png,image/jpeg,image/jpg"
-                                    onchange="">
-
-                                <span class="file-cta">
-                                    <!-- <div class="file-components"> -->
-                                        <span class="file-icon">
-                                            <font-awesome-icon icon="upload" />
-                                        </span>
-                                        <span class="file-label">
-                                            Adicionar uma image ao post...
-                                        </span>
-                                    <!-- </div> -->
-                                </span>
+                                    @change="atualizarPrevisualizacaoImagem()">
 
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="container">
-                    <textarea class="textarea conteudo-texto" placeholder="e.g. Hello world"></textarea>
+                    <textarea 
+                        class="textarea conteudo-texto" 
+                        placeholder="Adicionar o conteúdo do post" 
+                        v-model="post.conteudo">
+                    </textarea>
                 </div>
             </section>
             
@@ -72,7 +78,8 @@ export default {
             post: {
                 id: -1,
                 titulo: "",
-                conteudo: ""
+                conteudo: "",
+                imagem: "https://picsum.photos/id/1005/600/200"
             },
         }
     },
@@ -96,21 +103,88 @@ export default {
             // post
         },
         excluirPost() {
+            if (!confirm("Deseja mesmo excluir este post?")) {
+                return;
+            }
+
             alert("Excluiu registro")
             // delete
         },
 
         // Anexo da imagem
-        atualizarPrevisualizacaoImagem(campoUploadImagem) {
-            const imagem = campoUploadImagem.get(0).files[0];
+        atualizarPrevisualizacaoImagem() {
+            const imagem = document.querySelector("input.file-input").files[0];
 
             if (imagem) {
-                
-                alert("Sucesso em obter a imagem.");
+                this.carregarPrevisualizacaoImagem(imagem);
+                this.adicionarEventosAlternanciaPrevisualizacao();
                 return;
             }
 
             alert("Error ao obter a imagem.");
+        },
+        carregarPrevisualizacaoImagem(imagem) {
+            this.descarregarPrevisualizacaoImagem();
+
+            const fileReader = new FileReader();
+
+            fileReader.onload = function() {
+                const previsualizacaoImagem = document.getElementById("previsualizacaoImagem");
+                previsualizacaoImagem.setAttribute("src", fileReader.result);
+                previsualizacaoImagem.style.visibility = "visible";
+            }
+
+            fileReader.readAsDataURL(imagem);
+
+            console.log("Sucesso em carregar pré-visualização da imagem.");
+        },
+        descarregarPrevisualizacaoImagem() {
+            const previsualizacaoImagem = document.getElementById("previsualizacaoImagem");
+            previsualizacaoImagem.removeAttribute("src");
+            previsualizacaoImagem.style.visibility = "hidden";
+
+            console.log("Sucesso em descarregar pré-visualização da imagem.");
+        },
+        adicionarEventosAlternanciaPrevisualizacao() {
+            // let containerConteudoImagem = document.querySelector("div.conteudo-imagem");
+
+            // containerConteudoImagem.addEventListener(
+            //     "mouseenter", 
+            //     () => this.mostrarElementosImagem());
+
+            // containerConteudoImagem.addEventListener(
+            //     "mouseleave", 
+            //     () => this.esconderElementosImagem());
+
+            this.esconderElementosImagem();
+            document.querySelector("div.file-cta").style.visibility = "hidden";
+            document.querySelector("div.file-cta").style.position = "absolute";
+            document.querySelector("div.file-cta").style.zIndex = "1";
+        },
+        removerEventosAlternanciaPrevisualizacao() {
+            let containerConteudoImagem = document.querySelector("div.conteudo-imagem");
+
+            containerConteudoImagem.removeEventListener(
+                "mouseenter", 
+                () => this.mostrarElementosImagem());
+
+            containerConteudoImagem.removeEventListener(
+                "mouseleave", 
+                () => this.esconderElementosImagem());
+            
+            this.mostrarElementosImagem();
+            document.querySelector("div.file-cta").style.visibility = "visible";
+            document.querySelector("div.file-cta").style.removeProperty("position");
+            document.querySelector("div.file-cta").style.removeProperty("zIndex");
+            this.mostrarElementosImagem();
+        },
+        mostrarElementosImagem() {
+            document.querySelector("span.file-icon").style.visibility = "visible";
+            document.querySelector("span.file-label").style.visibility = "visible";
+        },
+        esconderElementosImagem() {
+            document.querySelector("span.file-icon").style.visibility = "hidden";
+            document.querySelector("span.file-label").style.visibility = "hidden";
         },
 
         // Alternância de visibilidade do modal
@@ -121,9 +195,19 @@ export default {
             modal.classList.add("is-active");
         },
         esconderModal() {
+            this.descarregarPrevisualizacaoImagem();
+            this.removerEventosAlternanciaPrevisualizacao();
+
+            this.post = {
+                id: -1,
+                titulo: "",
+                conteudo: "",
+                imagem: ""
+            };
+
             const modal = document.getElementById("postModal");
             modal.classList.remove("is-active");
-        }
+        },
     }
 }
 </script>
@@ -135,22 +219,33 @@ export default {
 
 .modal-card-custom-size {
     height: 80%;
-}
-
-
-#modal-card-custom-size {
     width: 80%;
-
 }
 
 .conteudo-imagem {
     width: 100%;
+    border-radius: 10px;
 }
 
 .conteudo-imagem>input
 .conteudo-imagem>span {
     display: none;
 }
+
+div .conteudo-imagem,
+label .file-label {
+    overflow: hidden;
+}
+
+/* 
+.file-cta-position {
+    position: absolute; 
+    z-index: 1; 
+    width: 100%; 
+    height: 100%; 
+    align-items: center; 
+    text-align: center;
+} */
 
 .conteudo-texto {
     margin-top: 20px;
@@ -162,5 +257,14 @@ export default {
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+.previsualizacao-imagem {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    border-radius: 5px;
+    object-fit: cover;
+    cursor: pointer;
 }
 </style>
