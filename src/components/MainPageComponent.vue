@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-            <div class="container">
+            <div class="container">0
                 <div class="section">
                     <div class="row columns is-multiline">
                         <post-card :post="post" v-for="post in posts" v-bind:key="post.ID_POST" />
@@ -66,7 +66,7 @@ export default {
             api.get("posts").then(response => {	
                 console.log(response.data);	
                 this.posts = response.data;	
-           })	
+           });
 
             // this.posts = [
             //     {

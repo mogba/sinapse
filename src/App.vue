@@ -3,8 +3,8 @@
         <head></head>
         <body>
             <main-page />
-            <!-- <componente-teste-requisicoes /> -->
             <!-- <post-modal /> -->
+            <!-- <componente-teste-requisicoes /> -->
         </body>
     </div>
 </template>

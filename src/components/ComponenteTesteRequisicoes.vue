@@ -41,9 +41,7 @@
 </template>
 
 <script>
-import axios from "axios";
-
-const url = "http://localhost:3080/";
+import api from "../services/services";
 
 export default {
     name: "ComponenteTesteRequisicoes",
@@ -63,14 +61,25 @@ export default {
     },
     methods: {
         buscar() {
+            /*
             axios.get(url).then(response => {
                 this.processos = response.data;
                 this.processosSemFiltro = response.data;
             });
+            */
+           api.get("teste").then(response => {
+               console.log(response.data)
+           })
         },
         criar() {
-            axios
-                .post(url, {
+            api.post("create/sinapse",{
+                    "nome_sinapse": "Post do Front", 
+                    "nome_usuario": "Axios Minusculo"
+                }).then((response) => {
+                    console.log(response)
+                });
+            /*
+            api.post("url", {
                     oof: this.dados.oof,
                     ooof: this.dados.ooof,
                     oooof: this.dados.oooof,
@@ -80,10 +89,11 @@ export default {
                 .then(response =>{
                     alert(response.data);
                 });
+            */
         },
         atualizar() {
-            axios
-                .put(url, {
+            api
+                .put("url", {
                     oof: this.dados.oof,
                     ooof: this.dados.ooof,
                     oooof: this.dados.oooof,
@@ -99,8 +109,8 @@ export default {
                 return;
             }
             
-            axios
-                .delete(url + this.dados.id)
+            api
+                .delete("url" + this.dados.id)
                 .then(response =>{
                     this.refreshData();
                     alert(response.data);
