@@ -25,7 +25,14 @@
                                     id="previsualizacaoImagem" 
                                     class="previsualizacao-imagem" />
 
-                                <div class="file-cta file-cta-position">
+                                <div class="file-cta">
+                                    <!-- <input 
+                                        class="input column" 
+                                        type="text" 
+                                        placeholder="Adicione a URL da sua imagem"
+                                        v-model="linkImagem"
+                                    /> -->
+
                                     <!-- <div class="file-components"> -->
                                         <span class="file-icon">
                                             <font-awesome-icon icon="upload" />
@@ -68,6 +75,8 @@
 </template>
 
 <script>
+import api from "../services/services";
+
 export default {
     name: "PostModal",
     props: {
@@ -79,7 +88,8 @@ export default {
                 id: -1,
                 titulo: "",
                 conteudo: "",
-                imagem: "https://picsum.photos/id/1005/600/200"
+                // linkImagem: "https://picsum.photos/id/1005/600/200"
+                linkImagem: ""
             },
         }
     },
@@ -94,20 +104,35 @@ export default {
         salvarPost() {
             if (this.post.id > 0)
             {
-                // put
                 alert("Alterou registro")
                 return;
             }
-            
-            alert("Criou registro")
-            // post
+            api.post("create/posts", {
+                    "id_sinapse" : 1, //Corrigir pra pegar o ID_SINAPSE de fato
+                    "titulo" : this.titulo,
+                    "descricao" : this.conteudo,
+                    "publico" : 1,
+                    "token_acesso" : "",
+                    "card" : this.linkImagem,
+                    "votos" : ""
+                }).then((response) => {
+                    console.log(response)
+                    alert("Criou registro")
+                });
         },
         excluirPost() {
             if (!confirm("Deseja mesmo excluir este post?")) {
                 return;
             }
 
-            alert("Excluiu registro")
+            console.log("Excluiu registro")
+
+            this.post = {
+                titulo: null,
+                conteudo: null,
+                imagem: null
+            }
+
             // delete
         },
 
@@ -208,6 +233,24 @@ export default {
             const modal = document.getElementById("postModal");
             modal.classList.remove("is-active");
         },
+        onFileChange(e) {
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length)
+                return;
+            this.createImage(files[0]);
+        },
+
+        createImage(file) {
+            //var image = new Image();
+            var reader = new FileReader();
+            var vm = this;
+
+            reader.onload = (e) => {
+                vm.image = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        },
     }
 }
 </script>
@@ -237,6 +280,7 @@ label .file-label {
     overflow: hidden;
 }
 
+/* implementar pelo js */
 /* 
 .file-cta-position {
     position: absolute; 
@@ -249,14 +293,6 @@ label .file-label {
 
 .conteudo-texto {
     margin-top: 20px;
-}
-
-.file-components {
-    width: 100%;
-    height: 200px;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
 }
 
 .previsualizacao-imagem {
