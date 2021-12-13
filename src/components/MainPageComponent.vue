@@ -73,6 +73,7 @@ export default {
                 this.posts = response.data;	
            });
 
+            /*
             this.posts = [
                 {
                     ID_POST: 1,
@@ -105,6 +106,7 @@ export default {
                     DESCRICAO: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
                 },
             ]
+            */
         },
         mostrarModal(postSelecionado) {
             this.eventBus.$emit("evento-mostrar-modal", postSelecionado);

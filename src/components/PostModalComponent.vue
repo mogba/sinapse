@@ -124,6 +124,17 @@ export default {
                 return;
             }
 
+            console.log(this.id_post);
+                console.log(this.post.id_post);
+                console.log(this.ID_POST);
+                console.log(this.post.ID_POST);
+
+            api.delete("delete/posts", {
+                data: {"id_post": this.post.ID_POST}
+            }).then((response) => {
+                console.log(response)
+            })
+
             console.log("Excluiu registro")
 
             this.post = {
