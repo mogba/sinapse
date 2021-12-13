@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-            <div class="container">0
+            <div class="container">
                 <div class="section">
                     <div class="row columns is-multiline">
                         <post-card :post="post" v-for="post in posts" v-bind:key="post.ID_POST" />
