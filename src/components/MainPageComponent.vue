@@ -17,10 +17,10 @@
                     </div>
                 </div>
             </div>
-            <div class="container">
+            <div class="container">0
                 <div class="section">
                     <div class="row columns is-multiline">
-                        <post-card :post="post" v-for="post in posts" v-bind:key="post.id" />
+                        <post-card :post="post" v-for="post in posts" v-bind:key="post.ID_POST" />
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
 import Navbar from "../components/NavbarComponent.vue";
 import PostCard from "../components/PostCardComponent.vue";
 import AddPostButton from "../components/AddPostButtonComponent.vue";
-//import api from "../services/services";
+import api from "../services/services";
 
 export default {
     name: 'MainPage',
@@ -51,15 +51,13 @@ export default {
     },
     methods: {
         carregarPosts() {
-            /*
-            api.get("posts").then(async response => {
+
+            api.get("posts").then(response => {
                 console.log(response.data);
-                this.posts.id = await response.data.id_post
-                this.posts.descricao = await response.data.descricao
-                this.posts.linkImagem = "https://source.unsplash.com/h-ACUrBngrw/1280x720"
+                this.posts = response.data;
            })
-           */
-           
+
+           /*
             this.posts = [
                 {
                     id: 1,
@@ -102,6 +100,7 @@ export default {
                     conteudo: "The Beast stumbled in the dark for it could no longer see the path. It started to fracture and weaken, trying to reshape itself into the form of metal. Even the witches would no longer lay eyes upon it, for it had become hideous and twisted."
                 }
             ]
+            */
         }
     }
 }

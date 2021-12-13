@@ -72,7 +72,7 @@ export default {
            })
         },
         criar() {
-            api.post("teste",{
+            api.post("create/sinapse",{
                     "nome_sinapse": "Post do Front", 
                     "nome_usuario": "Axios Minusculo"
                 }).then((response) => {
