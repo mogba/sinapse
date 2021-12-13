@@ -1,9 +1,7 @@
 <template>
-    <div class="fixed">
-        <button id="add-post-button" class="button is-primary">
-            <font-awesome-icon icon="plus" size="2x" />
-        </button>
-    </div>
+    <button id="add-post-button" class="button is-primary">
+        <font-awesome-icon icon="plus" size="2x" />
+    </button>
 </template>
 
 <script>

@@ -2,10 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUserSecret, faSearch, faPlus, faBars } from '@fortawesome/free-solid-svg-icons'
+import { faUserSecret, faSearch, faPlus, faBars, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUserSecret, faSearch, faPlus, faBars)
+library.add(faUserSecret, faSearch, faPlus, faBars, faUpload)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
