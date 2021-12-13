@@ -9,6 +9,7 @@
                         class="input column" 
                         type="text" 
                         placeholder="Adicionar um título ao post..."
+                        v-model="titulo"
                         @value="post.titulo" />
                 </div>
                 <div class="column is-narrow">
@@ -29,7 +30,15 @@
                                     type="file" 
                                     name="imagem" 
                                     accept="image/x-png,image/jpeg,image/jpg"
-                                    onchange="">
+                                    
+                                    >
+
+                                    <input 
+                                        class="input column" 
+                                        type="text" 
+                                        placeholder="Adicione a URL da sua imagem"
+                                        v-model="linkImagem"
+                                    />
 
                                 <span class="file-cta">
                                     <!-- <div class="file-components"> -->
@@ -47,7 +56,7 @@
                     </div>
                 </div>
                 <div class="container">
-                    <textarea class="textarea conteudo-texto" placeholder="e.g. Hello world"></textarea>
+                    <textarea class="textarea conteudo-texto" v-model="conteudo" placeholder="e.g. Hello world"></textarea>
                 </div>
             </section>
             
@@ -62,6 +71,8 @@
 </template>
 
 <script>
+import api from "../services/services";
+
 export default {
     name: "PostModal",
     props: {
@@ -72,7 +83,8 @@ export default {
             post: {
                 id: -1,
                 titulo: "",
-                conteudo: ""
+                conteudo: "",
+                linkImagem: ""
             },
         }
     },
@@ -87,16 +99,29 @@ export default {
         salvarPost() {
             if (this.post.id > 0)
             {
-                // put
                 alert("Alterou registro")
                 return;
             }
-            
-            alert("Criou registro")
-            // post
+            api.post("create/posts", {
+                    "id_sinapse" : 1, //Corrigir pra pegar o ID_SINAPSE de fato
+                    "titulo" : this.titulo,
+                    "descricao" : this.conteudo,
+                    "publico" : 1,
+                    "token_acesso" : "",
+                    "card" : this.linkImagem,
+                    "votos" : ""
+                }).then((response) => {
+                    console.log(response)
+                    alert("Criou registro")
+                });
         },
         excluirPost() {
-            alert("Excluiu registro")
+            //alert("Excluiu registro")
+            this.post = {
+                titulo: null,
+                conteudo: null,
+                imagem: null
+            }
             // delete
         },
 
@@ -123,7 +148,25 @@ export default {
         esconderModal() {
             const modal = document.getElementById("postModal");
             modal.classList.remove("is-active");
-        }
+        },
+        onFileChange(e) {
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length)
+                return;
+            this.createImage(files[0]);
+        },
+
+        createImage(file) {
+            //var image = new Image();
+            var reader = new FileReader();
+            var vm = this;
+
+            reader.onload = (e) => {
+                vm.image = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        },
     }
 }
 </script>
